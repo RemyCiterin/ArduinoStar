@@ -7,10 +7,14 @@ assume val real_world_t:Type0
 
 assume val real_world_bind : real_world_t -> UInt8.t * real_world_t
 
-noeq type state_t = {
+noeq type state_t' = {
      bytemap: U16.t -> U8.t;
      real_world: real_world_t
   }
+
+assume val well_formed_state_t : state_t' -> prop
+
+let state_t = s:state_t'{well_formed_state_t s}
 
 new_effect STATE = STATE_h state_t
 
