@@ -27,3 +27,8 @@ setup.log
 
 # Local OPAM switch
 _opam/
+
+# karamel generated file
+*.krml
+*.basic
+*.include
