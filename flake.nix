@@ -13,11 +13,26 @@
     };
   };
 
-  outputs = { self, nixpkgs }: {
+  # outputs = { self, fstar, flake-utils, nixpkgs, karamel }: {
+  #   packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
+  #   packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
+  # };
 
-    packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
-
-    packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
-
-  };
+  outputs = { self, fstar, flake-utils, nixpkgs, karamel }:
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+        fstarPackages = fstar.packages.${system};
+        karamel-home = karamel.packages.${system}.karamel.home;
+        ArduinoStar = pkgs.callPackage ./nix/ArduinoStar.nix {
+          inherit (fstarPackages) ocamlPackages z3 fstar;
+          karamel = karamel-home;
+          fstar-scripts = "${fstar}/.scripts";
+        };
+      in {
+        packages = {
+          inherit ArduinoStar;
+          default = ArduinoStar;
+        };
+      });
 }
