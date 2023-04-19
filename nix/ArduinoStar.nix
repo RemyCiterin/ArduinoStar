@@ -1,8 +1,7 @@
 {
   fetchFromGitHub, fstar, fstar-scripts, git, karamel, lib,
-  ocamlPackages, z3, python3, stdenv
+  ocamlPackages, z3, python3, stdenv, pkgs ? import <nixpkgs> { }
 }:
-
 let
   ArduinoStar = stdenv.mkDerivation {
     name = "ArduinoStar";
@@ -51,7 +50,12 @@ let
         sedlex
       ]);
 
-    buildInputs = [ z3 fstar karamel ];
+      buildInputs = [
+        z3
+        fstar
+        karamel
+        pkgs.emacsPackages.fstar-mode
+      ];
 
     FSTAR_HOME = fstar;
     KRML_HOME = karamel;

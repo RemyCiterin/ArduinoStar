@@ -28,6 +28,7 @@
           inherit (fstarPackages) ocamlPackages z3 fstar;
           karamel = karamel-home;
           fstar-scripts = "${fstar}/.scripts";
+          inherit pkgs;
         };
       in {
         packages = {

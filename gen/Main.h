@@ -10,6 +10,15 @@
 
 #include "krmllib.h"
 
+#define Main_X0 0
+#define Main_X1 1
+
+typedef uint8_t Main_test_type;
+
+bool Main_uu___is_X0(Main_test_type projectee);
+
+bool Main_uu___is_X1(Main_test_type projectee);
+
 uint32_t Main_square(uint32_t x);
 
 

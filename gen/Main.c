@@ -7,6 +7,36 @@
 
 #include "Main.h"
 
+bool Main_uu___is_X0(Main_test_type projectee)
+{
+  switch (projectee)
+  {
+    case Main_X0:
+      {
+        return true;
+      }
+    default:
+      {
+        return false;
+      }
+  }
+}
+
+bool Main_uu___is_X1(Main_test_type projectee)
+{
+  switch (projectee)
+  {
+    case Main_X1:
+      {
+        return true;
+      }
+    default:
+      {
+        return false;
+      }
+  }
+}
+
 uint32_t Main_square(uint32_t x)
 {
   return x * x;
