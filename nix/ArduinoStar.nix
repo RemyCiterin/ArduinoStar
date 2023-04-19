@@ -36,7 +36,19 @@ let
         batteries
         pprint
         stdint
+        yojson
         zarith
+        ppxlib
+        ppx_deriving
+        ppx_deriving_yojson
+        ctypes
+        cppo
+        alcotest
+        qcheck-core
+        secp256k1-internal
+        menhirLib
+        process
+        sedlex
       ]);
 
     buildInputs = [ z3 fstar karamel ];
