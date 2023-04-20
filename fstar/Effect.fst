@@ -10,32 +10,17 @@ open FStar.Monotonic.Pure
 let cst_pre (config state:Type0) = config -> (state -> Type0) -> Type0
 let cst_post (config state:Type0) (a:Type) = config -> (state -> Type0) -> a -> state -> Type0
 
-(*
-let cst_wp' (config state:Type0) (a:Type) = config -> (a -> state -> Type0) -> (state -> Type0) -> Type0
-
-unfold let cst_wp_monotonic (config state:Type0) (a:Type) (wp:cst_wp' config state a) =
-  forall (c:config) (p q: (a -> state -> Type0)).
-    (forall x s. p x s ==> q x s) ==>
-    (forall m. wp c p m ==> wp c q m)
-
-type cst_wp config state a = wp:cst_wp' config state a{cst_wp_monotonic config state a wp}
-
-
-type repr (config state:Type0) (a:Type) (wp:cst_wp config state a) =
-  c:config -> p0:(state -> Type0) ->
-  PURE (a & state -> state) (fun p -> cst_wp c (fun x s -> p ) p0)
-*)
-
 type repr (a:Type) (config state:Type0) (pre:cst_pre config state) (post:cst_post config state a) =
-  (c:config) -> (p:(state -> Type0)) -> // {pre c p}) -> 
-    Pure (a & (state -> state)) (requires pre c p) (ensures fun out ->
-      forall s. p s ==> post c p out._1 (out._2 s)
-    )
-    // out:(a & (state -> state)){forall s. p s ==> post c p out._1 (out._2 s)}
+  (c:config) -> (p:(state -> Type0) {pre c p}) -> 
+    //Pure (a & (state -> state)) (requires pre c p) (ensures fun out ->
+    //  forall s. p s ==> post c p out._1 (out._2 s)
+    //)
+    out:(a & (state -> state)){forall s. p s ==> post c p out._1 (out._2 s)}
 
-let return (a:Type) (config state:Type0) (x:a) :
+inline_for_extraction
+let return (a:Type) (x:a) (config state:Type0) :
   repr a config state (fun _ _ -> True) (fun _ p out s -> p s /\ x == out) =
-  fun c p -> (x, (fun s -> s))
+  fun c p -> (x, (fun (s:state) -> s))
 
 let bind (a b:Type) (config state:Type0)
   (pre_f:cst_pre config state)
@@ -59,3 +44,4 @@ effect {
   TEST (a:Type) (config state:Type0) (_:cst_pre config state) (_:cst_post config state a)
   with {repr; return; bind}
 }
+
