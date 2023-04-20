@@ -1,5 +1,7 @@
 module Main
 
+open MemoryModel
+
 type test_type = | X0 | X1
 
 let square (x: UInt32.t): UInt32.t =
