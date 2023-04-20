@@ -36,3 +36,6 @@ _opam/
 # emacs generated files
 *.fst~
 *.fsti~
+
+# CCLS cache
+.ccls-cache
