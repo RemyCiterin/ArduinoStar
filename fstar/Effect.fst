@@ -144,7 +144,7 @@ assume val cas0 (c:config) (key:U16.t) (old_v new_v:U8.t) :
       ))
     )
 
-let c0 = {
+let c0' = {
     r0 = (fun s1 s2 -> s1 == s2 \/
       ((
         Map.sel s1.bytemap 0us == 0uy \/
@@ -165,6 +165,11 @@ let c0 = {
     ))
   }
 
+let c0 = {
+  r0 = c0'.r0; // (fun _ _ -> True);
+  r1 = (fun x y -> x == y)
+}
+
 let c1 = {
     r1 = c0.r0;
     r0 = c0.r1
@@ -178,4 +183,10 @@ let prog0 (_:unit) :
   | None ->
     write0 #c0 1us 42uy;
     write0 #c0 2us 43uy;
+    write0 #c0 1us 44uy;
+    write0 #c0 1us 42uy;
+    //write0 #c0 1us 24uy;
+    //write0 #c0 7us 2uy;
+    //write0 #c0 8us 1uy;
+    //write0 #c0 9us 2uy;
     write0 #c0 0us 0uy
