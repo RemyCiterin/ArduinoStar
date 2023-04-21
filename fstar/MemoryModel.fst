@@ -95,7 +95,7 @@ let c0' = {
 
 let c0 = {
   r0 = c0'.r0; //(fun _ _ -> True);
-  r1 = (fun x y -> x == y);
+  r1 = c0'.r1 // (fun x y -> x == y);
 }
 
 let c1 = {
@@ -111,11 +111,11 @@ let prog0 (_:unit) :
   | None ->
     write0 #c0 1us 42uy;
     write0 #c0 2us 43uy;
-    write0 #c0 1us 10uy;
-    write0 #c0 1us 10uy;
-    write0 #c0 1us 10uy;
-    write0 #c0 1us 10uy;
-    write0 #c0 1us 10uy;
-    write0 #c0 1us 10uy;
+    //write0 #c0 1us 10uy;
+    //write0 #c0 1us 10uy;
+    //write0 #c0 1us 10uy;
+    //write0 #c0 1us 10uy;
+    //write0 #c0 1us 10uy;
+    //write0 #c0 1us 10uy;
     //write0 #c0 1us 10uy;
     write0 #c0 0us 0uy
