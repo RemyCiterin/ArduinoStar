@@ -18,7 +18,7 @@ let st_wp (a:Type) (state:Type0) (rel:P.preorder state) =
   w:st_wp' a state{st_wp_monotonic rel w}
 
 type repr (a:Type) (state:Type0) (rel:P.preorder state) (wp:st_wp a state rel) =
-  s0:state -> PURE (a & state)
+  s0:state -> DIV (a & state)
   (as_pure_wp (fun p -> wp (fun x s1 -> s0 `rel` s1 ==> p (x, s1)) s0))
 
 let return (a:Type) (x:a) (state:Type0) (rel:P.preorder state) :
@@ -74,7 +74,7 @@ let lift_pure_wp (#a:Type) (#state:Type0)
   fun p s0 -> wp (fun x -> p x s0)
 
 let lift_pure (a:Type) (state:Type0)
-  (rel:P.preorder state) (wp:pure_wp a) (f:unit -> PURE a wp) :
+  (rel:P.preorder state) (wp:pure_wp a) (f:unit -> DIV a wp) :
   repr a state rel (lift_pure_wp rel wp) =
   elim_pure_wp_monotonicity_forall ();
   fun s0 -> (f (), s0)
