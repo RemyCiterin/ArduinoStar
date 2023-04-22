@@ -10,9 +10,9 @@ let st_wp' (a:Type) (state:Type0) = st_post a state -> st_pre state
 
 let st_wp_monotonic (#a:Type) (#state:Type0) (rel:P.preorder state)
   (w:st_wp' a state) =
-  forall p q.
+  forall s p q.
     (forall r s. p r s ==> q r s) ==>
-    (forall s. w p s ==> w q s)
+    w p s ==> w q s
 
 let st_wp (a:Type) (state:Type0) (rel:P.preorder state) =
   w:st_wp' a state{st_wp_monotonic rel w}
@@ -68,18 +68,18 @@ effect {
   with {repr; return; bind; subcomp; if_then_else}
 }
 
-let lift_pure_wp (#a:Type) (#state:Type0)
+let lift_div_wp (#a:Type) (#state:Type0)
   (rel:P.preorder state) (wp:pure_wp a) : st_wp a state rel =
   elim_pure_wp_monotonicity wp;
   fun p s0 -> wp (fun x -> p x s0)
 
-let lift_pure (a:Type) (state:Type0)
+let lift_div (a:Type) (state:Type0)
   (rel:P.preorder state) (wp:pure_wp a) (f:unit -> DIV a wp) :
-  repr a state rel (lift_pure_wp rel wp) =
+  repr a state rel (lift_div_wp rel wp) =
   elim_pure_wp_monotonicity_forall ();
   fun s0 -> (f (), s0)
 
-
+sub_effect DIV ~> MSTATE = lift_div
 
 effect
   MST
@@ -94,3 +94,30 @@ effect
 
 effect Mst (a:Type) (state:Type0) (rel:P.preorder state) = MST a state rel (fun _ -> True) (fun _ _ _ -> True)
 
+(*
+let lift_rel (a:Type) (state:Type0)
+  (rel:P.preorder state)
+  (rel':P.preorder state{forall x y. rel x y ==> rel' x y})
+  (wp:st_wp a state rel) (wp':st_wp a state rel'{forall p s. wp' p s ==> wp p s})
+  (f: repr a state rel wp) :
+  repr a state rel' wp' = f
+*)
+
+[@@"opaque_to_smt"]
+let witnessed (#state:Type0) (rel:P.preorder state) (p:state -> Type0{P.stable p rel})
+  = W.witnessed rel p
+
+assume val witness (#state:Type0) (rel:P.preorder state)
+  (p:state -> Type0) : MSTATE unit state rel
+  (fun post s0 -> P.stable p rel /\ p s0 /\ (witnessed rel p ==> post () s0))
+
+assume val recall (#state:Type0) (rel:P.preorder state)
+  (p:state -> Type0) : MSTATE unit state rel
+  (fun post s0 -> P.stable p rel /\ witnessed rel p /\ (p s0 ==> post () s0))
+
+let witness_functoriality (#state:Type0) (rel:P.preorder state)
+  (p:state -> Type0{P.stable p rel /\ witnessed rel p})
+  (q:state -> Type0{P.stable q rel /\ (forall s. p s ==> q s)})
+  : Lemma (ensures witnessed rel q) =
+  reveal_opaque (`%witnessed) (witnessed rel);
+  W.lemma_witnessed_weakening rel p q

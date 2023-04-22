@@ -1,6 +1,6 @@
 module Main
 
-open MemoryModel
+open Monotonic.ST
 
 type test_type = | X0 | X1
 
