@@ -94,14 +94,22 @@ effect
 
 effect Mst (a:Type) (state:Type0) (rel:P.preorder state) = MST a state rel (fun _ -> True) (fun _ _ _ -> True)
 
-(*
+(* just to show that the following functino is not completly stupid *)
 let lift_rel (a:Type) (state:Type0)
   (rel:P.preorder state)
-  (rel':P.preorder state{forall x y. rel x y ==> rel' x y})
-  (wp:st_wp a state rel) (wp':st_wp a state rel'{forall p s. wp' p s ==> wp p s})
-  (f: repr a state rel wp) :
-  repr a state rel' wp' = f
-*)
+  (rel':P.preorder state)
+  (wp:st_wp a state rel)
+  (f: repr a state rel' wp) :
+  repr a state rel (fun post s0 -> (forall s1. rel' s0 s1 ==> rel s0 s1) /\ wp post s0) = f
+
+
+assume val mstate_lift_rel (a:Type) (#state:Type)
+  (rel rel':P.preorder state) (wp:st_wp a state rel')
+  (f:unit -> MSTATE a state rel' wp) :
+  MSTATE a state rel (fun post s0 -> 
+    (forall s1. rel' s0 s1 ==> rel s0 s1) /\ wp post s0
+  )
+
 
 [@@"opaque_to_smt"]
 let witnessed (#state:Type0) (rel:P.preorder state) (p:state -> Type0{P.stable p rel})
