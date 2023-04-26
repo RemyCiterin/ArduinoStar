@@ -1,11 +1,11 @@
 FSTAR  ?= fstar.exe
 KRML   ?= $(KRML_HOME)/krml
-MODULE ?= Monotonic.ST
+MODULE ?= Main
 SRC	   ?= ./fstar/
 
 extract-c:
 	@mkdir -p gen
-	$(FSTAR) $(SRC)/$(MODULE).fst --include $(SRC) --codegen krml --odir gen
+	$(FSTAR) $(SRC)/$(MODULE).fst --include $(SRC) --codegen krml --odir gen --include $(KRML_HOME)/krmllib
 	cd gen && $(KRML) *.krml -skip-linking -skip-compilation
 
 extract-ocaml:
