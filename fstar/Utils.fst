@@ -21,7 +21,7 @@ let reflexive (#a:Type) (r:relation a) : Type0 =
 let transitive (#a:Type) (r:relation a) : Type0 =
   forall x y z. r x y /\ r y z ==> r x z
 
-let preorder (a:Type) : Type =
+let preorder (a:Type u#u) : Type u#(max 1 u) =
   r:relation a{reflexive r /\ transitive r}
 
 
