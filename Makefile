@@ -11,3 +11,6 @@ extract-c:
 extract-ocaml:
 	@mkdir -p gen
 	$(FSTAR) $(SRC)/$(MODULE).fst --include $(SRC) --codegen OCaml --odir gen
+
+check:
+	$(FSTAR) $(SRC)/$(MODULE).fst --include $(SRC) --record_hints --use_hints
