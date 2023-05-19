@@ -47,3 +47,18 @@ let stable_on_closure (#a:Type) (r:a -> a -> Type0) (p:a -> prop) :
     (ensures forall x y.{:pattern (closure r x y)} p x /\ closure r x y ==> p y)
   = RT.stable_on_closure r p ()
 
+let p_union (#a:Type) (l r:preorder a) : preorder a =
+  closure (fun x y -> l x y \/ r x y)
+
+let p_union_left (#a:Type) (l r:preorder a) (x y z:a) :
+  Lemma (requires l x y /\ p_union l r y z)
+    (ensures p_union l r x z)
+    [SMTPat (p_union l r x z); SMTPat (l x y)]
+  = assert(p_union l r x y)
+
+let p_union_right (#a:Type) (l r:preorder a) (x y z: a) :
+  Lemma (requires r x y /\ p_union l r y z)
+    (ensures p_union l r x z)
+    [SMTPat (p_union l r x z); SMTPat (r x y)]
+  = assert(p_union l r x y)
+

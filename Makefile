@@ -1,13 +1,29 @@
 FSTAR  ?= fstar.exe
 KRML   ?= $(KRML_HOME)/krml
-MODULE ?= Main
+MODULE ?= Code
 SRC	   ?= ./fstar/
+
+INCLUDE_DIRS = \
+							$(KRML_HOME)/krmllib \
+
+FSTAR_INCLUDES = $(addprefix --include , $(INCLUDE_DIRS))
+
+%.fst-in:
+	@echo $(FSTAR_INCLUDES)
+
+%.fsti-in:
+	@echo $(FSTAR_INCLUDES)
 
 extract-c:
 	@mkdir -p gen
-	$(FSTAR) $(SRC)/$(MODULE).fst --include $(SRC) --codegen krml --odir gen --include $(KRML_HOME)/krmllib
+	$(FSTAR) $(SRC)/$(MODULE).fst --codegen krml --odir gen $(FSTAR_INCLUDES) --include $(SRC)
 	cd gen && $(KRML) *.krml -skip-linking -skip-compilation
 
 extract-ocaml:
 	@mkdir -p gen
-	$(FSTAR) $(SRC)/$(MODULE).fst --include $(SRC) --codegen OCaml --odir gen
+	$(FSTAR) $(SRC)/$(MODULE).fst --include $(SRC) --codegen OCaml --odir gen --include $(SRC)
+
+clean:
+	rm -rf gen
+	rm -rf fstar/*.fst~
+	rm -rf fstar/*.fsti~
