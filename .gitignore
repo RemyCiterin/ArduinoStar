@@ -39,3 +39,7 @@ _opam/
 
 # CCLS cache
 .ccls-cache
+
+gen/
+
+.direnv/
