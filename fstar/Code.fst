@@ -21,9 +21,11 @@ let prog (_:unit) :
     write 4us 55uy;
     write 5us 6uy;
     write 6us 6uy;
-    write 8us 6uy;
-    write 7us 6uy;
-    write 9us 6uy;
+    //write 8us 6uy;
+    //write 7us 6uy;
+    //write 9us 6uy;
+    //write 2us 6uy;
+    write 2us 6uy;
     write 2us 6uy;
     write 1us 6uy;
     check_pre (fun s -> Map.sel s 0us == 1uy);

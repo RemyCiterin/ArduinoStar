@@ -30,14 +30,10 @@
           fstar-scripts = "${fstar}/.scripts";
           inherit pkgs;
         };
-      in
-      {
+      in {
         packages = {
           inherit ArduinoStar;
           default = ArduinoStar;
-        };
-        devShell = pkgs.mkShell {
-          buildInputs = with pkgs; [ ccls ];
         };
       });
 }

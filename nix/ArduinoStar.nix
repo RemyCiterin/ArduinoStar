@@ -55,6 +55,7 @@ let
         pkgs.gnumake
         fstar
         karamel
+        pkgs.emacsPackages.fstar-mode
       ];
 
     FSTAR_HOME = fstar;
